@@ -1,8 +1,11 @@
 #include <stdio.h>
 
 #include "t_game.h"
+#include "t_usa.h"
 
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_INPUT_LENGTH 512
 
@@ -10,7 +13,11 @@ int main(int argc, char** argv)
 {
     char input[MAX_INPUT_LENGTH];
 
-    //I_Init();
+    srand(time(NULL));
+
+    T_InitUSA();
+
+    printf("> ");
 
     while(1)
     {

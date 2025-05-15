@@ -1,3 +1,7 @@
 info
     args: info {thing}
     prints information about a specified thing
+spy
+    args: spy {property}
+    learn information about a specific property of the soviet union
+    less likely to fail with a stronger military

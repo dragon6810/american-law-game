@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "t_soviet.h"
+#include "t_usa.h"
+
 #define MAX_ARG_LENGTH 64
 #define MAX_ARGS       16
 
@@ -12,9 +15,45 @@ void C_ProcessQuit(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
     exit(0);
 }
 
+void C_ProcessSpy(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
+{
+    int isecret;
+
+    if(nargs != 1)
+    {
+        printf("parse error: expected exactly 1 argument for spy command\n");
+        return;
+    }
+
+    if(!strcmp(args[0], "basedium"))
+        isecret = SOVIET_SECRET_BASEDIUM;
+    else if(!strcmp(args[0], "pepsium"))
+        isecret = SOVIET_SECRET_PEPSIUM;
+    else if(!strcmp(args[0], "obrion"))
+        isecret = SOVIET_SECRET_OBRION;
+    else
+    {
+        printf("parse error: unkown secret for spy command\n");
+        return;
+    }
+
+    T_Spy(isecret);
+}
+
 void C_ProcessInfo(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
 {
-    
+    if(nargs != 1)
+    {
+        printf("parse error: expected exactly 1 argument for info command\n");
+        return;
+    }
+
+    if(!strcmp(args[0], "soviet"))
+        T_PrintSovietInformation();
+    if(!strcmp(args[0], "usa"))
+        T_PrintUSAInfo();
+    else
+        printf("parse error: unkown thing for info command\n");
 }
 
 void C_ProcessArgs(const char* args, int* nargs, char outargs[MAX_ARGS][MAX_ARG_LENGTH])
@@ -97,8 +136,12 @@ void C_ProcessCommand(const char* command)
 
     if     (!strcmp(cmdname, "info"))
         C_ProcessInfo(nargs, args);
+    else if(!strcmp(cmdname, "spy"))
+        C_ProcessSpy(nargs, args);
     else if(!strcmp(cmdname, "quit") || !strcmp(cmdname, "q"))
         C_ProcessQuit(nargs, args);
     else
         printf("parse error: unknown command\n");
+
+    printf("> ");
 }
