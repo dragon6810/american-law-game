@@ -4,7 +4,7 @@
 
 #include <string.h>
 
-#define MAX_INPUT_LENGTH 8
+#define MAX_INPUT_LENGTH 512
 
 int main(int argc, char** argv)
 {
