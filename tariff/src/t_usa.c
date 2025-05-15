@@ -33,5 +33,21 @@ void T_PrintUSAInfo(void)
 
 void T_Spy(int secret)
 {
+    float risk;
+    float addtense;
+
+    risk = usa_military - soviet_secrets[SOVIET_SECRET_MILITARY] / 4;
+    if(T_RandomFloat(0, 100) > risk)
+    {
+        printf("your spy was caught\n");
+        addtense = T_RandomFloat(0, 15) + usa_military * T_RandomFloat(0, 0.05);
+        printf("+%3.1f tension\n", addtense);
+        soviet_tension += addtense;
+        return;
+    }
+
+    printf("your operation was successful\n");
+
     soviet_knownsecrets[secret] = 1;
+    soviet_lastsecrets[secret] = soviet_secrets[secret];
 }
