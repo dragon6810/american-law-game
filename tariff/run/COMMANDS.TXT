@@ -5,3 +5,11 @@ spy
     args: spy {property}
     learn information about a specific property of the soviet union
     less likely to fail with a stronger military
+step
+    args: step [number of months]
+    steps forward in time a certain number of months
+    defaults to 1
+    all that plays out is resource production, trade, and betterment/worsening of things depending on funds
+quit
+    args: quit
+    quits the game

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "t_game.h"
 #include "t_soviet.h"
 #include "t_usa.h"
 
@@ -13,6 +14,59 @@
 void C_ProcessQuit(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
 {
     exit(0);
+}
+
+void C_ProcessStep(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
+{
+    int i;
+
+    int nmonths;
+
+    if(nargs > 1)
+    {
+        printf("parse error: expected exactly 1 or 0 arguments for step command\n");
+        return;
+    }
+
+    nmonths = 1;
+    if(nargs)
+    {
+        for(i=0; i<strlen(args[0]); i++)
+        {
+            if(args[0][i] >= '0' && args[0][i] <= '9')
+                continue;
+
+            printf("parse error: expected positive integer for argument 1 of step command\n");
+            return;
+        }
+
+        nmonths = atoi(args[0]);
+    }
+
+    T_StepVariable(nmonths);
+
+    printf("stepped forward %d months\n", nmonths);
+}
+
+void C_ProcessExport(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
+{
+    float amount;
+    char *end;
+
+    if(nargs != 1)
+    {
+        printf("parse error: expected exactly 1 argument for export command\n");
+        return;
+    }
+
+    amount = strtod(args[0], &end);
+    if(end != args[0] + strlen(args[0]))
+    {
+        printf("parse error: expected valid float for argument 1 of export command\n");
+        return;
+    }
+
+    T_SetUSAExport(amount);
 }
 
 void C_ProcessSpy(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
@@ -31,6 +85,10 @@ void C_ProcessSpy(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         isecret = SOVIET_SECRET_PEPSIUM;
     else if(!strcmp(args[0], "obrion"))
         isecret = SOVIET_SECRET_OBRION;
+    else if(!strcmp(args[0], "military"))
+        isecret = SOVIET_SECRET_MILITARY;
+    else if(!strcmp(args[0], "economy"))
+        isecret = SOVIET_SECRET_ECONOMY;
     else
     {
         printf("parse error: unkown secret for spy command\n");
@@ -48,10 +106,12 @@ void C_ProcessInfo(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         return;
     }
 
-    if(!strcmp(args[0], "soviet"))
+    if     (!strcmp(args[0], "soviet"))
         T_PrintSovietInformation();
-    if(!strcmp(args[0], "usa"))
+    else if(!strcmp(args[0], "usa"))
         T_PrintUSAInfo();
+    else if(!strcmp(args[0], "export") || !strcmp(args[0], "exports"))
+        T_PrintUSAExportInfo();
     else
         printf("parse error: unkown thing for info command\n");
 }
@@ -138,8 +198,12 @@ void C_ProcessCommand(const char* command)
         C_ProcessInfo(nargs, args);
     else if(!strcmp(cmdname, "spy"))
         C_ProcessSpy(nargs, args);
+    else if(!strcmp(cmdname, "step"))
+        C_ProcessStep(nargs, args);
     else if(!strcmp(cmdname, "quit") || !strcmp(cmdname, "q"))
         C_ProcessQuit(nargs, args);
+    else if(!strcmp(cmdname, "export") || !strcmp(cmdname, "exports"))
+        C_ProcessExport(nargs, args);
     else
         printf("parse error: unknown command\n");
 

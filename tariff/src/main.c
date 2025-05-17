@@ -2,6 +2,7 @@
 
 #include "t_game.h"
 #include "t_usa.h"
+#include "t_soviet.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -13,12 +14,12 @@ int main(int argc, char** argv)
 {
     char input[MAX_INPUT_LENGTH];
 
+    printf("\033[2J\033[H");
+
     srand(time(NULL));
 
-    T_InitUSA();
-
+    T_InitGame();
     printf("> ");
-
     while(1)
     {
         fgets(input, MAX_INPUT_LENGTH, stdin);
