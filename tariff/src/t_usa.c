@@ -9,18 +9,21 @@ float usa_stockmarket;
 float usa_nucleardevelopment;
 float usa_military;
 float usa_tariff;
-float usa_resources[3];
-float usa_export;
+float usa_resources[NRESOURCES];
+float usa_outlets[USA_NOUTLETS];
 
 void T_InitUSA(void)
 {
+    int i;
+
     usa_stockmarket = T_RandomFloat(70, 80);
     usa_nucleardevelopment = 0;
     usa_military = T_RandomFloat(75, 85);
     usa_resources[RESOURCE_BASEDIUM] = T_RandomFloat(10, 18);
     usa_resources[RESOURCE_PEPSIUM] = T_RandomFloat(0, 5);
     usa_resources[RESOURCE_OBRION] = T_RandomFloat(7, 12);
-    usa_export = 4;
+    for(i=0; i<USA_NOUTLETS; i++)
+        usa_outlets[i] = 100.0 / ((float) USA_NOUTLETS);
 }
 
 void T_PrintUSAInfo(void)
@@ -34,20 +37,49 @@ void T_PrintUSAInfo(void)
     printf("    obrion:              %3.1f tons\n", usa_resources[RESOURCE_OBRION]);
 }
 
-void T_PrintUSAExportInfo(void)
+void T_PrintUSAOutletInfo(void)
 {
-    printf("exporting %.1f tons of basedium per month (max is %.1f)\n", usa_export, (float) MAX_USA_EXPORT);
+    int i;
+
+    float surplus;
+
+    printf("usa basedium distribution (%.1f tons produced per month):\n", (float) USA_PRODUCTION);
+
+    printf("    sell to soviet union: %3.1f%%\n", usa_outlets[USA_OUTLET_SELL]);
+    printf("    research:             %3.1f%%\n", usa_outlets[USA_OUTLET_RESEARCH]);
+    printf("    circulate in economy: %3.1f%%\n", usa_outlets[USA_OUTLET_CIRCULATE]);
+
+    for(i=0, surplus=0; i<USA_NOUTLETS; i++)
+        surplus += usa_outlets[i];
+    surplus = 100 - surplus;
+
+    printf("    surplus:              %3.1f%%\n", surplus);
 }
 
-void T_SetUSAExport(float amount)
+void T_SetUSAOutlet(int ioutlet, float amount)
 {
-    if(amount < 0 || amount > MAX_USA_EXPORT)
+    int i;
+
+    float total;
+
+    if(amount < 0 || amount > 100)
     {
-        printf("error: expected float from 0.0-%.1f\n", (float) MAX_USA_EXPORT);
+        printf("error: expected float from 0-100\n");
         return;
     }
 
-    usa_export = amount;
+    for(i=0, total=0; i<USA_NOUTLETS; i++)
+        total += usa_outlets[i];
+    total -= usa_outlets[ioutlet];
+    total += amount;
+
+    if(total > 100)
+    {
+        printf("error: new total surpasses 100%%\n");
+        return;
+    }
+
+    usa_outlets[ioutlet] = amount;
 }
 
 void T_Spy(int secret)

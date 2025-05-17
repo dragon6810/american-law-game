@@ -48,25 +48,38 @@ void C_ProcessStep(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
     printf("stepped forward %d months\n", nmonths);
 }
 
-void C_ProcessExport(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
+void C_ProcessBasedium(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
 {
     float amount;
     char *end;
+    int outlet;
 
-    if(nargs != 1)
+    if(nargs != 2)
     {
-        printf("parse error: expected exactly 1 argument for export command\n");
+        printf("parse error: expected exactly 2 arguments for basedium command\n");
         return;
     }
 
-    amount = strtod(args[0], &end);
-    if(end != args[0] + strlen(args[0]))
+    amount = strtod(args[1], &end);
+    if(end != args[1] + strlen(args[1]))
     {
-        printf("parse error: expected valid float for argument 1 of export command\n");
+        printf("parse error: expected valid float for argument 2 of basedium command\n");
         return;
     }
 
-    T_SetUSAExport(amount);
+    if(!strcmp(args[0], "sell"))
+        outlet = USA_OUTLET_SELL;
+    else if(!strcmp(args[0], "research") || !strcmp(args[0], "use"))
+        outlet = USA_OUTLET_RESEARCH;
+    else if(!strcmp(args[0], "circulate"))
+        outlet = USA_OUTLET_CIRCULATE;
+    else
+    {
+        printf("parse error: unknown outlet for basedium\n");
+        return;
+    }
+
+    T_SetUSAOutlet(outlet, amount);
 }
 
 void C_ProcessSpy(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
@@ -110,8 +123,8 @@ void C_ProcessInfo(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         T_PrintSovietInformation();
     else if(!strcmp(args[0], "usa"))
         T_PrintUSAInfo();
-    else if(!strcmp(args[0], "export") || !strcmp(args[0], "exports"))
-        T_PrintUSAExportInfo();
+    else if(!strcmp(args[0], "basedium"))
+        T_PrintUSAOutletInfo();
     else
         printf("parse error: unkown thing for info command\n");
 }
@@ -202,8 +215,8 @@ void C_ProcessCommand(const char* command)
         C_ProcessStep(nargs, args);
     else if(!strcmp(cmdname, "quit") || !strcmp(cmdname, "q"))
         C_ProcessQuit(nargs, args);
-    else if(!strcmp(cmdname, "export") || !strcmp(cmdname, "exports"))
-        C_ProcessExport(nargs, args);
+    else if(!strcmp(cmdname, "basedium"))
+        C_ProcessBasedium(nargs, args);
     else
         printf("parse error: unknown command\n");
 
