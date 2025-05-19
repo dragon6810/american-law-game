@@ -1,6 +1,8 @@
 #ifndef _SOVIET_H
 #define _SOVIET_H
 
+#include "t_game.h"
+
 #define SOVIET_SECRET_BASEDIUM 0
 #define SOVIET_SECRET_PEPSIUM  1
 #define SOVIET_SECRET_OBRION   2
@@ -11,6 +13,7 @@
 extern int soviet_knownsecrets[SOVIET_NSECRETS];
 extern float soviet_lastsecrets[SOVIET_NSECRETS];
 extern float soviet_secrets[SOVIET_NSECRETS];
+extern float soviet_outlets[NOUTLETS];
 extern float soviet_tariff;
 extern float soviet_tension;
 

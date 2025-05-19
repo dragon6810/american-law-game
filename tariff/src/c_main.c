@@ -48,6 +48,40 @@ void C_ProcessStep(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
     printf("stepped forward %d months\n", nmonths);
 }
 
+void C_ProcessBudget(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
+{
+    char *end;
+    float amount;
+    int budget;
+
+    if(nargs != 2)
+    {
+        printf("parse error: expected exactly 2 arguments for budget command\n");
+        return;
+    }
+
+    amount = strtod(args[1], &end);
+    if(end != args[1] + strlen(args[1]))
+    {
+        printf("parse error: expected valid float for argument 2 of basedium command\n");
+        return;
+    }
+
+    if(!strcmp(args[0], "miltary"))
+        budget = BUDGET_MILITARY;
+    else if(!strcmp(args[0], "production") || !strcmp(args[0], "produce") || !strcmp(args[0], "basedium"))
+        budget = BUDGET_PRODUCTION;
+    else if(!strcmp(args[0], "research"))
+        budget = BUDGET_RESEARCH;
+    else
+    {
+        printf("parse error: unknown budget\n");
+        return;
+    }
+
+    T_SetUSABudget(budget, amount);
+}
+
 void C_ProcessBasedium(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
 {
     float amount;
@@ -68,11 +102,11 @@ void C_ProcessBasedium(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
     }
 
     if(!strcmp(args[0], "sell"))
-        outlet = USA_OUTLET_SELL;
+        outlet = OUTLET_SELL;
     else if(!strcmp(args[0], "research") || !strcmp(args[0], "use"))
-        outlet = USA_OUTLET_RESEARCH;
+        outlet = OUTLET_RESEARCH;
     else if(!strcmp(args[0], "circulate"))
-        outlet = USA_OUTLET_CIRCULATE;
+        outlet = OUTLET_CIRCULATE;
     else
     {
         printf("parse error: unknown outlet for basedium\n");
@@ -125,6 +159,8 @@ void C_ProcessInfo(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         T_PrintUSAInfo();
     else if(!strcmp(args[0], "basedium"))
         T_PrintUSAOutletInfo();
+    else if(!strcmp(args[0], "budget"))
+        T_PrintUSABudgetInfo();
     else
         printf("parse error: unkown thing for info command\n");
 }
@@ -217,6 +253,8 @@ void C_ProcessCommand(const char* command)
         C_ProcessQuit(nargs, args);
     else if(!strcmp(cmdname, "basedium"))
         C_ProcessBasedium(nargs, args);
+    else if(!strcmp(cmdname, "budget"))
+        C_ProcessBudget(nargs, args);
     else
         printf("parse error: unknown command\n");
 

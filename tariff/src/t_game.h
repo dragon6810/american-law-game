@@ -6,13 +6,15 @@
 #define RESOURCE_OBRION   2
 #define NRESOURCES        3
 
-typedef struct
-{
-    float military;
-    float development;
-} budget_t;
+#define OUTLET_SELL      0
+#define OUTLET_RESEARCH  1
+#define OUTLET_CIRCULATE 2
+#define NOUTLETS         3
 
-extern float resourceprices[3];
+#define BUDGET_MILITARY   0
+#define BUDGET_PRODUCTION 1
+#define BUDGET_RESEARCH   2
+#define NBUDGETS          3
 
 float T_RandomFloat(float min, float max);
 void T_ProcessInput(const char* message);

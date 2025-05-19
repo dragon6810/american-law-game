@@ -10,7 +10,8 @@ float usa_nucleardevelopment;
 float usa_military;
 float usa_tariff;
 float usa_resources[NRESOURCES];
-float usa_outlets[USA_NOUTLETS];
+float usa_outlets[NOUTLETS];
+float usa_budgets[NBUDGETS];
 
 void T_InitUSA(void)
 {
@@ -21,9 +22,10 @@ void T_InitUSA(void)
     usa_military = T_RandomFloat(75, 85);
     usa_resources[RESOURCE_BASEDIUM] = T_RandomFloat(10, 18);
     usa_resources[RESOURCE_PEPSIUM] = T_RandomFloat(0, 5);
-    usa_resources[RESOURCE_OBRION] = T_RandomFloat(7, 12);
-    for(i=0; i<USA_NOUTLETS; i++)
-        usa_outlets[i] = 100.0 / ((float) USA_NOUTLETS);
+    for(i=0; i<NOUTLETS; i++)
+        usa_outlets[i] = 100.0 / ((float) NOUTLETS);
+    for(i=0; i<NBUDGETS; i++)
+        usa_budgets[i] = 100.0 / ((float) NBUDGETS);
 }
 
 void T_PrintUSAInfo(void)
@@ -34,7 +36,6 @@ void T_PrintUSAInfo(void)
     printf("    military strength:   %3.1f%%\n", usa_military);
     printf("    basedium:            %3.1f tons\n", usa_resources[RESOURCE_BASEDIUM]);
     printf("    pepsium:             %3.1f tons\n", usa_resources[RESOURCE_PEPSIUM]);
-    printf("    obrion:              %3.1f tons\n", usa_resources[RESOURCE_OBRION]);
 }
 
 void T_PrintUSAOutletInfo(void)
@@ -45,15 +46,34 @@ void T_PrintUSAOutletInfo(void)
 
     printf("usa basedium distribution (%.1f tons produced per month):\n", (float) USA_PRODUCTION);
 
-    printf("    sell to soviet union: %3.1f%%\n", usa_outlets[USA_OUTLET_SELL]);
-    printf("    research:             %3.1f%%\n", usa_outlets[USA_OUTLET_RESEARCH]);
-    printf("    circulate in economy: %3.1f%%\n", usa_outlets[USA_OUTLET_CIRCULATE]);
+    printf("    sell to soviet union: %3.1f%%\n", usa_outlets[OUTLET_SELL]);
+    printf("    research:             %3.1f%%\n", usa_outlets[OUTLET_RESEARCH]);
+    printf("    circulate in economy: %3.1f%%\n", usa_outlets[OUTLET_CIRCULATE]);
 
-    for(i=0, surplus=0; i<USA_NOUTLETS; i++)
+    for(i=0, surplus=0; i<NOUTLETS; i++)
         surplus += usa_outlets[i];
     surplus = 100 - surplus;
 
     printf("    surplus:              %3.1f%%\n", surplus);
+}
+
+void T_PrintUSABudgetInfo(void)
+{
+    int i;
+
+    float surplus;
+
+    printf("usa budget distribution:\n");
+
+    printf("    military:            %3.1f%%\n", usa_budgets[BUDGET_MILITARY]);
+    printf("    basedium refinement: %3.1f%%\n", usa_budgets[BUDGET_PRODUCTION]);
+    printf("    research:            %3.1f%%\n", usa_budgets[BUDGET_RESEARCH]);
+
+    for(i=0, surplus=0; i<NBUDGETS; i++)
+        surplus += usa_budgets[i];
+    surplus = 100 - surplus;
+
+    printf("    surplus:             %3.1f%%\n", surplus);
 }
 
 void T_SetUSAOutlet(int ioutlet, float amount)
@@ -68,7 +88,7 @@ void T_SetUSAOutlet(int ioutlet, float amount)
         return;
     }
 
-    for(i=0, total=0; i<USA_NOUTLETS; i++)
+    for(i=0, total=0; i<NOUTLETS; i++)
         total += usa_outlets[i];
     total -= usa_outlets[ioutlet];
     total += amount;
@@ -80,6 +100,32 @@ void T_SetUSAOutlet(int ioutlet, float amount)
     }
 
     usa_outlets[ioutlet] = amount;
+}
+
+void T_SetUSABudget(int ibudget, float amount)
+{
+    int i;
+
+    float total;
+
+    if(amount < 0 || amount > 100)
+    {
+        printf("error: expected float from 0-100\n");
+        return;
+    }
+
+    for(i=0, total=0; i<NBUDGETS; i++)
+        total += usa_budgets[i];
+    total -= usa_budgets[ibudget];
+    total += amount;
+
+    if(total > 100)
+    {
+        printf("error: new total surpasses 100%%\n");
+        return;
+    }
+
+    usa_budgets[ibudget] = amount;
 }
 
 void T_Spy(int secret)

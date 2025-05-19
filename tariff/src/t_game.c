@@ -29,6 +29,9 @@ void T_UpdateEconomy(void)
     addecousa = T_RandomFloat(-6, 6);
     addecosoviet = T_RandomFloat(-6, 6);
 
+    addecousa += usa_outlets[OUTLET_SELL] / 100.0 * USA_PRODUCTION * 1.0;
+    addecousa += usa_outlets[OUTLET_CIRCULATE] / 100.0 * USA_PRODUCTION * 0.3;
+
     usa_stockmarket += addecousa;
     soviet_secrets[SOVIET_SECRET_ECONOMY] += addecosoviet;
 
