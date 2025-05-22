@@ -67,7 +67,7 @@ void C_ProcessBudget(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         return;
     }
 
-    if(!strcmp(args[0], "miltary"))
+    if(!strcmp(args[0], "military"))
         budget = BUDGET_MILITARY;
     else if(!strcmp(args[0], "production") || !strcmp(args[0], "produce") || !strcmp(args[0], "basedium"))
         budget = BUDGET_PRODUCTION;
