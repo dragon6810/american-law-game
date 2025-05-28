@@ -48,6 +48,27 @@ void C_ProcessStep(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
     printf("stepped forward %d months\n", nmonths);
 }
 
+void C_ProcessTariff(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
+{
+    char *end;
+    float amount;
+
+    if(nargs != 1)
+    {
+        printf("parse error: expected exactly 1 argument for tariff command\n");
+        return;
+    }
+
+    amount = strtod(args[0], &end);
+    if(end != args[0] + strlen(args[0]))
+    {
+        printf("parse error: expected valid float for argument 1 of tariff command\n");
+        return;
+    }
+
+    T_SetUSATariff(amount);
+}
+
 void C_ProcessBudget(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
 {
     char *end;
@@ -126,12 +147,8 @@ void C_ProcessSpy(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         return;
     }
 
-    if(!strcmp(args[0], "basedium"))
-        isecret = SOVIET_SECRET_BASEDIUM;
-    else if(!strcmp(args[0], "pepsium"))
-        isecret = SOVIET_SECRET_PEPSIUM;
-    else if(!strcmp(args[0], "obrion"))
-        isecret = SOVIET_SECRET_OBRION;
+    if(!strcmp(args[0], "research"))
+        isecret = SOVIET_SECRET_RESEARCH;
     else if(!strcmp(args[0], "military"))
         isecret = SOVIET_SECRET_MILITARY;
     else if(!strcmp(args[0], "economy"))
@@ -255,6 +272,8 @@ void C_ProcessCommand(const char* command)
         C_ProcessBasedium(nargs, args);
     else if(!strcmp(cmdname, "budget"))
         C_ProcessBudget(nargs, args);
+    else if(!strcmp(cmdname, "tariff"))
+        C_ProcessTariff(nargs, args);
     else
         printf("parse error: unknown command\n");
 

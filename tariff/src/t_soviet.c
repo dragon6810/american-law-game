@@ -14,27 +14,19 @@ float soviet_tension;
 void T_PrintSovietInformation(void)
 {
     printf("Soviet Union Information:\n");
+    if(soviet_knownsecrets[SOVIET_SECRET_RESEARCH])
+        printf("    research:       %3.1f%%\n", soviet_lastsecrets[SOVIET_SECRET_RESEARCH]);
+    else
+        printf("    research:       ???%%\n");
     if(soviet_knownsecrets[SOVIET_SECRET_ECONOMY])
         printf("    economy health: %3.1f%%\n", soviet_lastsecrets[SOVIET_SECRET_ECONOMY]);
     else
         printf("    economy health: ???%%\n");
     if(soviet_knownsecrets[SOVIET_SECRET_MILITARY])
-        printf("    military: %3.1f%%\n", soviet_lastsecrets[SOVIET_SECRET_MILITARY]);
+        printf("    military:       %3.1f%%\n", soviet_lastsecrets[SOVIET_SECRET_MILITARY]);
     else
-        printf("    military: ???%%\n");
-    if(soviet_knownsecrets[SOVIET_SECRET_BASEDIUM])
-        printf("    basedium: %3.1f tons\n", soviet_lastsecrets[SOVIET_SECRET_BASEDIUM]);
-    else
-        printf("    basedium: ??? tons\n");
-    if(soviet_knownsecrets[SOVIET_SECRET_PEPSIUM])
-        printf("    pepsium:  %3.1f tons\n", soviet_lastsecrets[SOVIET_SECRET_PEPSIUM]);
-    else
-        printf("    pepsium:  ??? tons\n");
-    if(soviet_knownsecrets[SOVIET_SECRET_OBRION])
-        printf("    obrion:   %3.1f tons\n", soviet_lastsecrets[SOVIET_SECRET_OBRION]);
-    else
-        printf("    obrion:   ??? tons\n");
-    printf    ("    tension:  %3.1f%%\n", soviet_tension);
+        printf("    military:       ???%%\n");;
+    printf    ("    tension:        %3.1f%%\n", soviet_tension);
 }
 
 void T_InitSoviet(void)
@@ -42,9 +34,7 @@ void T_InitSoviet(void)
     int i;
 
     soviet_tension = T_RandomFloat(40, 55);
-    soviet_secrets[SOVIET_SECRET_BASEDIUM] = T_RandomFloat(0, 5);
-    soviet_secrets[SOVIET_SECRET_PEPSIUM] = T_RandomFloat(10, 18);
-    soviet_secrets[SOVIET_SECRET_OBRION] = T_RandomFloat(7, 12);
+    soviet_secrets[SOVIET_SECRET_RESEARCH] = 0.0;
     soviet_secrets[SOVIET_SECRET_MILITARY] = T_RandomFloat(65, 80);
     soviet_secrets[SOVIET_SECRET_ECONOMY] = T_RandomFloat(75, 90);
     

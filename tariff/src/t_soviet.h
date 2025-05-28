@@ -3,12 +3,10 @@
 
 #include "t_game.h"
 
-#define SOVIET_SECRET_BASEDIUM 0
-#define SOVIET_SECRET_PEPSIUM  1
-#define SOVIET_SECRET_OBRION   2
-#define SOVIET_SECRET_MILITARY 3
-#define SOVIET_SECRET_ECONOMY  4
-#define SOVIET_NSECRETS        5
+#define SOVIET_SECRET_RESEARCH 0
+#define SOVIET_SECRET_MILITARY 1
+#define SOVIET_SECRET_ECONOMY  2
+#define SOVIET_NSECRETS        3
 
 extern int soviet_knownsecrets[SOVIET_NSECRETS];
 extern float soviet_lastsecrets[SOVIET_NSECRETS];
