@@ -94,6 +94,8 @@ void C_ProcessBudget(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         budget = BUDGET_PRODUCTION;
     else if(!strcmp(args[0], "research"))
         budget = BUDGET_RESEARCH;
+    else if(!strcmp(args[0], "pepsium") || !strcmp(args[0], "import") || !strcmp(args[0], "buy"))
+        budget = BUDGET_IMPORT;
     else
     {
         printf("parse error: unknown budget\n");

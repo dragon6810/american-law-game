@@ -44,11 +44,10 @@ void T_UpdateResearch(void)
         sovietproduction = 0;
 
     importpercent = usa_budgets[BUDGET_IMPORT] / 3;
-    privateimportpercent = (1 / (usa_tariff + 1)) * (1.0 - importpercent / 100.0) * 100.0 / 4.0;
+    privateimportpercent = (1 / ((usa_tariff / 100.0) + 1)) * (1.0 - importpercent / 100.0) * 100.0 / 4.0;
     sovietsurplus = 100.0 - privateimportpercent;
-    //printf("gov imports: %f%%\n", importpercent);
-    //printf("private imports: %f%%\n", privateimportpercent);
-    //printf("soviet surplus: %f%%\n", sovietsurplus);
+    printf("you imported %.1f tons of pepsium\n", sovietproduction * (importpercent / 100.0));
+    printf("private U.S. companies imported %.1f tons of pepsium\n", sovietproduction * (privateimportpercent / 100.0));
 
     usaresearch  = sovietproduction * (importpercent / 100.0);
     usaresearch += usa_production * (usa_outlets[OUTLET_RESEARCH] / 100.0);
