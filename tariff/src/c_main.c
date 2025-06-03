@@ -180,6 +180,8 @@ void C_ProcessInfo(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         T_PrintUSAOutletInfo();
     else if(!strcmp(args[0], "budget"))
         T_PrintUSABudgetInfo();
+    else if(!strcmp(args[0], "tariff"))
+        T_PrintUSATariffInfo();
     else
         printf("parse error: unkown thing for info command\n");
 }

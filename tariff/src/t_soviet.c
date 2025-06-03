@@ -7,8 +7,6 @@
 int soviet_knownsecrets[SOVIET_NSECRETS] = {};
 float soviet_lastsecrets[SOVIET_NSECRETS];
 float soviet_secrets[SOVIET_NSECRETS];
-float soviet_outlets[NOUTLETS];
-float soviet_tariff;
 float soviet_tension;
 
 void T_PrintSovietInformation(void)
@@ -31,13 +29,8 @@ void T_PrintSovietInformation(void)
 
 void T_InitSoviet(void)
 {
-    int i;
-
     soviet_tension = T_RandomFloat(40, 55);
     soviet_secrets[SOVIET_SECRET_RESEARCH] = 0.0;
     soviet_secrets[SOVIET_SECRET_MILITARY] = T_RandomFloat(65, 80);
     soviet_secrets[SOVIET_SECRET_ECONOMY] = T_RandomFloat(75, 90);
-    
-    for(i=0; i<NOUTLETS; i++)
-        soviet_outlets[i] = 100.0 / (float) NOUTLETS;
 }

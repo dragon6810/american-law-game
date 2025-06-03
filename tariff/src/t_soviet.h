@@ -11,8 +11,6 @@
 extern int soviet_knownsecrets[SOVIET_NSECRETS];
 extern float soviet_lastsecrets[SOVIET_NSECRETS];
 extern float soviet_secrets[SOVIET_NSECRETS];
-extern float soviet_outlets[NOUTLETS];
-extern float soviet_tariff;
 extern float soviet_tension;
 
 void T_PrintSovietInformation(void);

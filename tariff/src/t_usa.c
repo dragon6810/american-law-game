@@ -76,6 +76,11 @@ void T_PrintUSABudgetInfo(void)
     printf("    surplus:             %3.1f%%\n", surplus);
 }
 
+void T_PrintUSATariffInfo(void)
+{
+    printf("tariff on pepsium is at %.1f%%\n", usa_tariff);
+}
+
 void T_SetUSAOutlet(int ioutlet, float amount)
 {
     int i;

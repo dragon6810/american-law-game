@@ -11,8 +11,16 @@ const char* randomresearchdebuffevents[] =
 {
     "an unpaid intern was dissolved in acid. better safety regulations will set your research back.",
     "a scientist tripped and accidentally triggered a convieniently placed self destruct button on one of your labs.",
-    "the local daredevil drove his car into one of your labs full force after he lost a bed.",
+    "the local daredevil drove his car into one of your labs full force after he lost a bet.",
     "a top researcher got poached by Bell Labs.",
+};
+
+const char* randommilitarydebuffevents[] =
+{
+    "a high-ranking military general quit to pursue a degree in evolutionary biology.",
+    "one of your top submersibles imploded after trying to visit the titanic.",
+    "a pilot carrying an expensive load of nuclear weapons died attempting a quintuple barrel roll.",
+    "a lead military strategist left to make a business to produce microprocessors for this computer fad.",
 };
 
 float T_RandomFloat(float min, float max)
@@ -31,6 +39,33 @@ void T_InitGame(void)
     T_InitSoviet();
 }
 
+void T_UpdateTension()
+{
+    soviet_tension += T_RandomFloat(0.0, 3.0);
+    soviet_tension += (usa_stockmarket - soviet_secrets[SOVIET_SECRET_ECONOMY]) * T_RandomFloat(0.0, 0.1);
+    soviet_tension += (usa_military - soviet_secrets[SOVIET_SECRET_MILITARY]) * T_RandomFloat(0.0, 0.2);
+    soviet_tension += (usa_nucleardevelopment - soviet_secrets[SOVIET_SECRET_RESEARCH]) * T_RandomFloat(0.0, 0.05);
+}
+
+void T_UpdateMilitary(void)
+{
+    int message;
+    float removeamount;
+
+    usa_military += (usa_budgets[BUDGET_MILITARY] / 100.0) * (usa_stockmarket / 6.0);
+    usa_military -= T_RandomFloat(2.0, 6.0);
+
+    if(T_RandomFloat(0, 100) < 6.0 + 6.0 * (1.0 - usa_military / 100.0))
+    {
+        message = rand() % (sizeof(randommilitarydebuffevents) / sizeof(char*));
+        puts(randommilitarydebuffevents[message]);
+
+        removeamount = T_RandomFloat(2.0, 2.0 + (1.0 - usa_military / 100.0) * 6.0);
+        printf("-%.1f miltary\n", removeamount);
+        usa_military -= removeamount;
+    }
+}
+
 void T_UpdateResearch(void)
 {
     float usaresearch, sovietresearch;
@@ -45,22 +80,22 @@ void T_UpdateResearch(void)
 
     importpercent = usa_budgets[BUDGET_IMPORT] / 3;
     privateimportpercent = (1 / ((usa_tariff / 100.0) + 1)) * (1.0 - importpercent / 100.0) * 100.0 / 4.0;
-    sovietsurplus = 100.0 - privateimportpercent;
-    printf("you imported %.1f tons of pepsium\n", sovietproduction * (importpercent / 100.0));
-    printf("private U.S. companies imported %.1f tons of pepsium\n", sovietproduction * (privateimportpercent / 100.0));
+    sovietsurplus = 100.0 - privateimportpercent - importpercent;
 
-    usaresearch  = sovietproduction * (importpercent / 100.0);
-    usaresearch += usa_production * (usa_outlets[OUTLET_RESEARCH] / 100.0);
-    usaresearch *= (usa_budgets[BUDGET_RESEARCH] / 100.0 * ((usa_stockmarket / 2.0 + 50.0) / 100.0));
+    usaresearch  = sovietproduction * (importpercent / 100.0) * 3.0;
+    usaresearch += usa_production * (usa_outlets[OUTLET_RESEARCH] / 100.0) * 2.0;
+    usaresearch *= ((usa_budgets[BUDGET_RESEARCH] + 50.0) * (usa_stockmarket / 2.0 + 50.0)) / 10000.0;
 
     sovietresearch = sovietproduction * (sovietsurplus / 100.0);
     sovietresearch += usa_production * (usa_outlets[OUTLET_SELL] / 100.0);
+    soviet_tension -= usa_outlets[OUTLET_SELL] / 12.0;
+    sovietresearch *= ((soviet_secrets[SOVIET_SECRET_ECONOMY] / 2.0 + 50.0) / 100.0);
     
     usa_nucleardevelopment += usaresearch;
     usa_stockmarket += privateimportpercent / 13.0;
     soviet_secrets[SOVIET_SECRET_ECONOMY] += privateimportpercent / 11.0;
 
-    soviet_secrets[SOVIET_SECRET_RESEARCH] += sovietresearch;
+    soviet_secrets[SOVIET_SECRET_RESEARCH] += sovietresearch * 0.5;
     soviet_secrets[SOVIET_SECRET_ECONOMY] += (importpercent + privateimportpercent) / 4.0;
 
     remove = T_RandomFloat(0.0, 5.0);
@@ -132,6 +167,8 @@ void T_Step(void)
     T_ApplyBudget();
     T_UpdateEconomy();
     T_UpdateResearch();
+    T_UpdateMilitary();
+    T_UpdateTension();
 
     if(usa_nucleardevelopment >= 100.0 && soviet_secrets[SOVIET_SECRET_RESEARCH] >= 100.0)
     {

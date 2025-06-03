@@ -15,6 +15,7 @@ void T_InitUSA(void);
 void T_PrintUSAInfo(void);
 void T_PrintUSAOutletInfo(void);
 void T_PrintUSABudgetInfo(void);
+void T_PrintUSATariffInfo(void);
 void T_SetUSAOutlet(int ioutlet, float amount);
 void T_SetUSABudget(int ibudget, float amount);
 void T_SetUSATariff(float amount);
