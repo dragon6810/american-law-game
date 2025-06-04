@@ -45,6 +45,10 @@ void T_UpdateTension()
     soviet_tension += (usa_stockmarket - soviet_secrets[SOVIET_SECRET_ECONOMY]) * T_RandomFloat(0.0, 0.1);
     soviet_tension += (usa_military - soviet_secrets[SOVIET_SECRET_MILITARY]) * T_RandomFloat(0.0, 0.2);
     soviet_tension += (usa_nucleardevelopment - soviet_secrets[SOVIET_SECRET_RESEARCH]) * T_RandomFloat(0.0, 0.05);
+    soviet_tension -= (usa_outlets[OUTLET_SELL]) / 15.0;
+    
+    if(soviet_tension < 0.0)
+        soviet_tension = 0.0;
 }
 
 void T_UpdateMilitary(void)
@@ -52,7 +56,7 @@ void T_UpdateMilitary(void)
     int message;
     float removeamount;
 
-    usa_military += (usa_budgets[BUDGET_MILITARY] / 100.0) * (usa_stockmarket / 6.0);
+    usa_military += (usa_budgets[BUDGET_MILITARY] / 33.3) * (usa_stockmarket / 6.0);
     usa_military -= T_RandomFloat(2.0, 6.0);
 
     if(T_RandomFloat(0, 100) < 6.0 + 6.0 * (1.0 - usa_military / 100.0))
@@ -180,7 +184,7 @@ void T_Step(void)
     if(usa_nucleardevelopment >= 100.0)
     {
         printf("you made a breakthrough before the Soivet Union.\n");
-        if(soviet_secrets[SOVIET_SECRET_MILITARY] - usa_military >= -5.0)
+        if(soviet_tension > 85.0)
         {
             printf("you and the Union were unable to make peace during negotiations and you bombed their major cities,");
             printf("leaving millions dead and Eurasia in shambles.\n");

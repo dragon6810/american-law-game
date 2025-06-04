@@ -64,10 +64,10 @@ void T_PrintUSABudgetInfo(void)
 
     printf("usa budget distribution:\n");
 
-    printf("    military:            %3.1f%%\n", usa_budgets[BUDGET_MILITARY]);
-    printf("    basedium refinement: %3.1f%%\n", usa_budgets[BUDGET_PRODUCTION]);
-    printf("    research:            %3.1f%%\n", usa_budgets[BUDGET_RESEARCH]);
-    printf("    pepsium import:      %3.1f%%\n", usa_budgets[BUDGET_IMPORT]);
+    printf("    military: %3.1f%%\n", usa_budgets[BUDGET_MILITARY]);
+    printf("    basedium: %3.1f%%\n", usa_budgets[BUDGET_PRODUCTION]);
+    printf("    research: %3.1f%%\n", usa_budgets[BUDGET_RESEARCH]);
+    printf("    pepsium:  %3.1f%%\n", usa_budgets[BUDGET_IMPORT]);
 
     for(i=0, surplus=0; i<NBUDGETS; i++)
         surplus += usa_budgets[i];

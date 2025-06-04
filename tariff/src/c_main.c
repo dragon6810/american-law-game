@@ -172,13 +172,13 @@ void C_ProcessInfo(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         return;
     }
 
-    if     (!strcmp(args[0], "soviet"))
+    if     (!strcmp(args[0], "soviet") || !strcmp(args[0], "ussr"))
         T_PrintSovietInformation();
     else if(!strcmp(args[0], "usa"))
         T_PrintUSAInfo();
-    else if(!strcmp(args[0], "basedium"))
+    else if(!strcmp(args[0], "basedium") || !strcmp(args[0], "outlets") || !strcmp(args[0], "outlets"))
         T_PrintUSAOutletInfo();
-    else if(!strcmp(args[0], "budget"))
+    else if(!strcmp(args[0], "budgets") || !strcmp(args[0], "budget"))
         T_PrintUSABudgetInfo();
     else if(!strcmp(args[0], "tariff"))
         T_PrintUSATariffInfo();
@@ -272,9 +272,9 @@ void C_ProcessCommand(const char* command)
         C_ProcessStep(nargs, args);
     else if(!strcmp(cmdname, "quit") || !strcmp(cmdname, "q"))
         C_ProcessQuit(nargs, args);
-    else if(!strcmp(cmdname, "basedium"))
+    else if(!strcmp(cmdname, "basedium") || !strcmp(cmdname, "outlets") || !strcmp(cmdname, "outlet"))
         C_ProcessBasedium(nargs, args);
-    else if(!strcmp(cmdname, "budget"))
+    else if(!strcmp(cmdname, "budgets") || !strcmp(cmdname, "budget"))
         C_ProcessBudget(nargs, args);
     else if(!strcmp(cmdname, "tariff"))
         C_ProcessTariff(nargs, args);
