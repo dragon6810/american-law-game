@@ -7,6 +7,8 @@
 #include "t_soviet.h"
 #include "t_usa.h"
 
+int month = 0;
+
 const char* randomresearchdebuffevents[] =
 {
     "an unpaid intern was dissolved in acid. better safety regulations will set your research back.",
@@ -25,7 +27,7 @@ const char* randommilitarydebuffevents[] =
 
 float T_RandomFloat(float min, float max)
 {
-    return ((float) rand() / RAND_MAX) * (max - min) + min;
+    return ((float) rand() / (float) RAND_MAX) * (max - min) + min;
 }
 
 void T_ProcessInput(const char* message)
@@ -46,6 +48,7 @@ void T_UpdateTension()
     soviet_tension += (usa_military - soviet_secrets[SOVIET_SECRET_MILITARY]) * T_RandomFloat(0.0, 0.2);
     soviet_tension += (usa_nucleardevelopment - soviet_secrets[SOVIET_SECRET_RESEARCH]) * T_RandomFloat(0.0, 0.05);
     soviet_tension -= (usa_outlets[OUTLET_SELL]) / 15.0;
+    soviet_tension -= (usa_budgets[BUDGET_IMPORT]) / 15.0;
     
     if(soviet_tension < 0.0)
         soviet_tension = 0.0;
@@ -121,6 +124,7 @@ void T_UpdateEconomy(void)
 
     addecousa += usa_outlets[OUTLET_SELL] / 100.0 * usa_production * 1.0;
     addecousa += usa_outlets[OUTLET_CIRCULATE] / 100.0 * usa_production * 0.3;
+    addecosoviet -= usa_tariff / 8.0;
 
     usa_stockmarket += addecousa;
     soviet_secrets[SOVIET_SECRET_ECONOMY] += addecosoviet;
@@ -150,7 +154,7 @@ void T_ApplyBudget(void)
     budgeteffect[BUDGET_MILITARY] += T_RandomFloat(-8, 8);
     budgeteffect[BUDGET_MILITARY] /= 4.0;
 
-    budgeteffect[BUDGET_PRODUCTION] = (usa_budgets[BUDGET_PRODUCTION] / 100.0) * totalbudget - 14.0;
+    budgeteffect[BUDGET_PRODUCTION] = (usa_budgets[BUDGET_PRODUCTION] / 100.0) * totalbudget - 8.0;
     budgeteffect[BUDGET_PRODUCTION] /= 15.0;
 
     usa_military += budgeteffect[BUDGET_MILITARY];
@@ -212,10 +216,17 @@ void T_Step(void)
         printf("\nYOU LOSE\n");
         exit(0);
     }
+
+    month++;
 }
 
 void T_StepVariable(int i)
 {
     while(i--)
         T_Step();
+}
+
+void T_PrintTimeInfo(void)
+{
+    printf("you have been playing for %d months\n", month);
 }

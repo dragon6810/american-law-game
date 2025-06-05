@@ -14,6 +14,8 @@ int main(int argc, char** argv)
 {
     char input[MAX_INPUT_LENGTH];
 
+    setvbuf(stdout, NULL, _IONBF, 0);
+
     printf("\033[2J\033[H");
 
     srand(time(NULL));

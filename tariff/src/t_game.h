@@ -16,10 +16,13 @@
 #define BUDGET_IMPORT     3
 #define NBUDGETS          4
 
+extern int month;
+
 float T_RandomFloat(float min, float max);
 void T_ProcessInput(const char* message);
 void T_InitGame(void);
 void T_Step(void);
 void T_StepVariable(int i);
+void T_PrintTimeInfo(void);
 
 #endif

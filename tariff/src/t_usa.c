@@ -31,10 +31,10 @@ void T_InitUSA(void)
 void T_PrintUSAInfo(void)
 {
     printf("USA Information:\n");
-    printf("    economy health:      %3.1f%%\n", usa_stockmarket);
-    printf("    nuclear development: %3.1f%%\n", usa_nucleardevelopment);
-    printf("    military strength:   %3.1f%%\n", usa_military);
-    printf("    tariff on pepsium:   %3.1f%%\n", usa_tariff);
+    printf("    economy health:    %3.1f%%\n", usa_stockmarket);
+    printf("    research:          %3.1f%%\n", usa_nucleardevelopment);
+    printf("    military strength: %3.1f%%\n", usa_military);
+    printf("    tariff on pepsium: %3.1f%%\n", usa_tariff);
 }
 
 void T_PrintUSAOutletInfo(void)
@@ -73,7 +73,7 @@ void T_PrintUSABudgetInfo(void)
         surplus += usa_budgets[i];
     surplus = 100 - surplus;
 
-    printf("    surplus:             %3.1f%%\n", surplus);
+    printf("    surplus:  %3.1f%%\n", surplus);
 }
 
 void T_PrintUSATariffInfo(void)
@@ -151,7 +151,7 @@ void T_Spy(int secret)
     float risk;
     float addtense;
 
-    risk = usa_military - soviet_secrets[SOVIET_SECRET_MILITARY] / 4;
+    risk = usa_military - soviet_secrets[SOVIET_SECRET_MILITARY] / 2;
     if(T_RandomFloat(0, 100) > risk)
     {
         printf("your spy was caught\n");

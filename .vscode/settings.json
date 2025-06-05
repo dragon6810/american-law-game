@@ -4,5 +4,6 @@
         "string.h": "c",
         "termios.h": "c",
         "stdlib.h": "c"
-    }
+    },
+    "liveServer.settings.port": 5501
 }

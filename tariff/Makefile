@@ -51,3 +51,23 @@ $(OBJ_DIR)/%.o: %.c
 clean:
 	rm -rf $(OBJ_DIR)
 	rm -rf $(BIN_DIR)
+
+wasm: CC := emcc
+wasm: LD := emcc
+wasm: CC_FLAGS := -Wall -O2 -std=gnu89 \
+	-sALLOW_MEMORY_GROWTH=1 \
+	-sEXPORTED_RUNTIME_METHODS='["cwrap","ccall","callMain","FS"]' \
+	-sFORCE_FILESYSTEM \
+	-s ASYNCIFY \
+	-sUSE_ES6_IMPORT_META=0 \
+	-sENVIRONMENT=web \
+	-sASSERTIONS=1 \
+	-sMODULARIZE=1 \
+	-sEXPORT_ES6=1 \
+	-sEXPORTED_FUNCTIONS='["_main"]' \
+	--js-library=node_modules/xterm-pty/emscripten-pty.js \
+	-sASYNCIFY
+wasm: LD_FLAGS :=
+wasm: WASM_OUT := $(BIN_DIR)/tariffwar.js
+wasm: mkdirs
+	$(LD) $(SRC_FILE) $(CC_FLAGS) -o $(WASM_OUT)

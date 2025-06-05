@@ -12,14 +12,14 @@ float soviet_tension;
 void T_PrintSovietInformation(void)
 {
     printf("Soviet Union Information:\n");
-    if(soviet_knownsecrets[SOVIET_SECRET_RESEARCH])
-        printf("    research:       %3.1f%%\n", soviet_lastsecrets[SOVIET_SECRET_RESEARCH]);
-    else
-        printf("    research:       ???%%\n");
     if(soviet_knownsecrets[SOVIET_SECRET_ECONOMY])
         printf("    economy health: %3.1f%%\n", soviet_lastsecrets[SOVIET_SECRET_ECONOMY]);
     else
         printf("    economy health: ???%%\n");
+    if(soviet_knownsecrets[SOVIET_SECRET_RESEARCH])
+        printf("    research:       %3.1f%%\n", soviet_lastsecrets[SOVIET_SECRET_RESEARCH]);
+    else
+        printf("    research:       ???%%\n");
     if(soviet_knownsecrets[SOVIET_SECRET_MILITARY])
         printf("    military:       %3.1f%%\n", soviet_lastsecrets[SOVIET_SECRET_MILITARY]);
     else

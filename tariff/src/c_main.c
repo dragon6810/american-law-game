@@ -8,12 +8,31 @@
 #include "t_soviet.h"
 #include "t_usa.h"
 
-#define MAX_ARG_LENGTH 64
-#define MAX_ARGS       16
+int nhistory = 0;
+prevcommand_t history[MAX_CMD_HISTORY] = {};
 
 void C_ProcessQuit(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
 {
     exit(0);
+}
+
+void C_ProcessHistory(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
+{
+    int i, j;
+
+    if(nargs)
+    {
+        printf("parse error: expected exactly 0 arguments for history\n");
+        return;
+    }
+
+    for(i=0; i<nhistory; i++)
+    {
+        printf("%s ", history[i].cmd);
+        for(j=0; j<history[i].nargs; j++)
+            printf("%s ", history[i].args[j]);
+        printf("\n");
+    }
 }
 
 void C_ProcessStep(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
@@ -75,6 +94,12 @@ void C_ProcessBudget(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
     float amount;
     int budget;
 
+    if(!nargs || !strcmp(args[1], "info"))
+    {
+        T_PrintUSABudgetInfo();
+        return;
+    }
+
     if(nargs != 2)
     {
         printf("parse error: expected exactly 2 arguments for budget command\n");
@@ -110,6 +135,12 @@ void C_ProcessBasedium(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
     float amount;
     char *end;
     int outlet;
+
+    if(!nargs || !strcmp(args[1], "info"))
+    {
+        T_PrintUSAOutletInfo();
+        return;
+    }
 
     if(nargs != 2)
     {
@@ -172,16 +203,18 @@ void C_ProcessInfo(int nargs, char args[MAX_ARGS][MAX_ARG_LENGTH])
         return;
     }
 
-    if     (!strcmp(args[0], "soviet") || !strcmp(args[0], "ussr"))
+    if     (!strcmp(args[0], "soviet") || !strcmp(args[0], "ussr") || !strcmp(args[0], "commies"))
         T_PrintSovietInformation();
     else if(!strcmp(args[0], "usa"))
         T_PrintUSAInfo();
-    else if(!strcmp(args[0], "basedium") || !strcmp(args[0], "outlets") || !strcmp(args[0], "outlets"))
+    else if(!strcmp(args[0], "basedium") || !strcmp(args[0], "outlets") || !strcmp(args[0], "outlet"))
         T_PrintUSAOutletInfo();
     else if(!strcmp(args[0], "budgets") || !strcmp(args[0], "budget"))
         T_PrintUSABudgetInfo();
     else if(!strcmp(args[0], "tariff"))
         T_PrintUSATariffInfo();
+    else if(!strcmp(args[0], "time") || !strcmp(args[0], "month") || !strcmp(args[0], "months"))
+        T_PrintTimeInfo();
     else
         printf("parse error: unkown thing for info command\n");
 }
@@ -228,6 +261,8 @@ void C_ProcessArgs(const char* args, int* nargs, char outargs[MAX_ARGS][MAX_ARG_
     *nargs = iarg;
 }
 
+int historyoverflow = 0;
+
 void C_ProcessCommand(const char* command)
 {
     char *cstart, *cstop, *argstart;
@@ -241,7 +276,7 @@ void C_ProcessCommand(const char* command)
 
     if(!*cstart)
     {
-        printf("parse error: expected command\n");
+        printf("parse error: expected command\n> ");
         return;
     }
 
@@ -251,7 +286,7 @@ void C_ProcessCommand(const char* command)
 
     if(cstop - cstart >= MAX_ARG_LENGTH)
     {
-        printf("parse error: unknown command\n");
+        printf("parse error: unknown command\n> ");
         return;
     }
 
@@ -264,22 +299,39 @@ void C_ProcessCommand(const char* command)
 
     C_ProcessArgs(argstart, &nargs, args);
 
-    if     (!strcmp(cmdname, "info"))
+    if     (!strcmp(cmdname, "info") || !strcmp(cmdname, "i"))
         C_ProcessInfo(nargs, args);
-    else if(!strcmp(cmdname, "spy"))
+    else if(!strcmp(cmdname, "spy") || !strcmp(cmdname, "sp"))
         C_ProcessSpy(nargs, args);
-    else if(!strcmp(cmdname, "step"))
+    else if(!strcmp(cmdname, "step") || !strcmp(cmdname, "st"))
         C_ProcessStep(nargs, args);
     else if(!strcmp(cmdname, "quit") || !strcmp(cmdname, "q"))
         C_ProcessQuit(nargs, args);
-    else if(!strcmp(cmdname, "basedium") || !strcmp(cmdname, "outlets") || !strcmp(cmdname, "outlet"))
+    else if(!strcmp(cmdname, "basedium") || !strcmp(cmdname, "outlets") || !strcmp(cmdname, "outlet") || !strcmp(cmdname, "o"))
         C_ProcessBasedium(nargs, args);
-    else if(!strcmp(cmdname, "budgets") || !strcmp(cmdname, "budget"))
+    else if(!strcmp(cmdname, "budgets") || !strcmp(cmdname, "budget") || !strcmp(cmdname, "b"))
         C_ProcessBudget(nargs, args);
-    else if(!strcmp(cmdname, "tariff"))
+    else if(!strcmp(cmdname, "tariff") || !strcmp(cmdname, "t"))
         C_ProcessTariff(nargs, args);
+    else if(!strcmp(cmdname, "history"))
+        C_ProcessHistory(nargs, args);
     else
         printf("parse error: unknown command\n");
+
+    if(!historyoverflow)
+    {
+        memcpy(history[nhistory].cmd, cmdname, MAX_ARG_LENGTH);
+        memcpy(history[nhistory].args, args, sizeof(args));
+        history[nhistory].nargs = nargs;
+        nhistory++;
+    }
+
+    if(nhistory+1 >= MAX_CMD_HISTORY && !historyoverflow)
+    {
+        printf("error: max commands reached. max is %d\n", MAX_CMD_HISTORY);
+        printf("future commands will not be saved\n");
+        historyoverflow = 1;
+    }
 
     printf("> ");
 }
