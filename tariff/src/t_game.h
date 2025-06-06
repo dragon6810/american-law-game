@@ -18,6 +18,7 @@
 
 extern int month;
 
+unsigned T_RandomInt(void);
 float T_RandomFloat(float min, float max);
 void T_ProcessInput(const char* message);
 void T_InitGame(void);

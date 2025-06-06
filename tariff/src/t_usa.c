@@ -141,7 +141,11 @@ void T_SetUSATariff(float amount)
         return;
     }
 
-    soviet_tension += (amount - usa_tariff) / 3.0 + T_RandomFloat(0.0, 6.0);
+    if(amount > usa_tariff)
+        soviet_tension += (amount - usa_tariff) / 3.0;
+    else
+        soviet_tension += (amount - usa_tariff) / 5.0;
+    soviet_tension += T_RandomFloat(0.0, 5.0);
 
     usa_tariff = amount;
 }

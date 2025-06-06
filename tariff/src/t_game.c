@@ -25,9 +25,23 @@ const char* randommilitarydebuffevents[] =
     "a lead military strategist left to make a business to produce microprocessors for this computer fad.",
 };
 
+unsigned randomseed = 1993;
+unsigned T_RandomInt(void)
+{
+    randomseed += (randomseed << 10);
+    randomseed ^= (randomseed >>  6);
+    randomseed += (randomseed <<  3);
+    randomseed ^= (randomseed >> 11);
+    randomseed += (randomseed << 15);
+    return randomseed % RAND_MAX;
+}
+
 float T_RandomFloat(float min, float max)
 {
-    return ((float) rand() / (float) RAND_MAX) * (max - min) + min;
+    float ret;
+    ret = ((float) T_RandomInt() / (float) RAND_MAX) * (max - min) + min;
+    //printf("(%f, %f) = %f\n", min, max, ret);
+    return ret;
 }
 
 void T_ProcessInput(const char* message)
@@ -62,9 +76,10 @@ void T_UpdateMilitary(void)
     usa_military += (usa_budgets[BUDGET_MILITARY] / 33.3) * (usa_stockmarket / 6.0);
     usa_military -= T_RandomFloat(2.0, 6.0);
 
-    if(T_RandomFloat(0, 100) < 6.0 + 6.0 * (1.0 - usa_military / 100.0))
+    //printf("%f%% chance of military event\n", 6.0 + 22.0 * (1.0 - usa_military / 100.0));
+    if(T_RandomFloat(0, 100) < 6.0 + 22.0 * (1.0 - usa_military / 100.0))
     {
-        message = rand() % (sizeof(randommilitarydebuffevents) / sizeof(char*));
+        message = T_RandomInt() % (sizeof(randommilitarydebuffevents) / sizeof(char*));
         puts(randommilitarydebuffevents[message]);
 
         removeamount = T_RandomFloat(2.0, 2.0 + (1.0 - usa_military / 100.0) * 6.0);
@@ -106,9 +121,10 @@ void T_UpdateResearch(void)
     soviet_secrets[SOVIET_SECRET_ECONOMY] += (importpercent + privateimportpercent) / 4.0;
 
     remove = T_RandomFloat(0.0, 5.0);
-    if(!(rand() % 16) && remove >= usa_nucleardevelopment)
+    //printf("%f%% chance of research event\n", usa_nucleardevelopment / 4.0 + 30.0 / 4.0);
+    if(T_RandomFloat(0.0, 400.0) < usa_nucleardevelopment + 30.0 && remove >= usa_nucleardevelopment)
     {
-        imessage = rand() % (sizeof(randomresearchdebuffevents) / sizeof(char*));
+        imessage = T_RandomInt() % (sizeof(randomresearchdebuffevents) / sizeof(char*));
         puts(randomresearchdebuffevents[imessage]);
         printf("-%.1f research\n", remove);
         usa_nucleardevelopment -= remove;
